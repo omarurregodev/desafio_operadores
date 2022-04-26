@@ -6,6 +6,7 @@ let btnFilter = document.getElementById("btnFilter");
 let busquedaField = document.getElementById("busqueda");
 
 
+
 //let graphicArray = [];
 
 // AGREGO LOS LISTENERS DE LOS BOTONES
@@ -27,19 +28,24 @@ window.addEventListener('DOMContentLoaded', onloadLocalstorage, false);
 function onloadLocalstorage() {
 	//alert('cargo');
 
-	if (localStorage.getItem('usuarios') == null) {
-		userArray = [];
-	} else {
-		userArray = localStorage.getItem('usuarios');
-		userArray = JSON.parse(userArray);
+	// OPERADOR TERNARIO DEL CICLO IF DE LA FUNCION
+	localStorage.getItem('usuarios') == null 
+		? userArray = [] 
+		: userArray = localStorage.getItem('usuarios'),userArray = JSON.parse(userArray),graficar(userArray);
 	
-		graficar(userArray);
-	}
+	
+	//if (localStorage.getItem('usuarios') == null) {
+	//	userArray = [];
+	//} else {
+	//	userArray = localStorage.getItem('usuarios');
+	//	userArray = JSON.parse(userArray);
+	//	graficar(userArray);
+	//}
 
 }
 
 function newUser() {
-
+		
 	if (document.getElementById("name").value == '' || document.getElementById("age").value == '' || document.getElementById("career").value == '' || document.getElementById("about").value == '') {
 		alert('Todos los campos deben de estar llenos');
 	} else {
@@ -73,7 +79,7 @@ function graficar(usuarios){
 	perfil='';
 
 	for (let i = 0; i < usuarios.length; i++) {
-		perfil = perfil + "<div class='card mx-2 p-2' style='width: 18rem;'> <div class='card-body'> <h5 class='card-title'>"+usuarios[i].name+"</h5> <p class='card-text'>"+usuarios[i].age+"</p> <p class='card-text'>"+usuarios[i].career+"</p> <p class='card-text'>"+usuarios[i].about+"</p> </div> <div class='card-body'> <button class='btn btn-danger' onClick='deleteUser("+i+");'><i class='fa-solid fa-user-xmark'></i>  Eliminar</button></button></div> </div>";
+		perfil = perfil + "<div class='card mx-2 p-2' style='width: 18rem;'> <div class='card-body'> <h5 class='card-title'>"+usuarios[i].name+"</h5> <p class='card-text'>"+usuarios[i].age+"</p> <p class='card-text'>"+usuarios[i].career+"</p> <p class='card-text'>"+usuarios[i].about+"</p> </div> <div class='card-body'> <button class='btn btn-danger' onClick='deleteUser("+i+");' data-bs-toggle='modal' data-bs-target='#deleteModal'><i class='fa-solid fa-user-xmark'></i>  Eliminar</button></button></div> </div>";
 	}
 	//Renderizo todo apenas acabe
 	html_perfil.innerHTML = perfil;
@@ -106,9 +112,35 @@ function buscar() {
 	graficar(resultado);
 }
 
+
 function deleteUser(id){
-	alert('Eliminaras al usuario '+userArray[id].name+", estas seguro?");
+
+	
+	let btnDeleteUserModalCancel = document.getElementById("btnDeleteUserModalCancel");
+	let modalBody = document.getElementById("modalBody");
+
+
+	let modalParrafo = "<p class='p'>Estas seguro que deseas eliminar al usuario: "+userArray[id].name+" </p>";
+	modalBody.innerHTML = modalParrafo;
+
+
+	deleteUserConfirm(id);
+
+
+	//alert('Eliminaras al usuario '+userArray[id].name+", estas seguro?");
+
+}
+let btnDeleteUserModal = document.getElementById("btnDeleteUserModal");
+
+function deleteUserConfirm(id) {
+
+	console.log("aqui esta el id: "+userArray[id].name);
+	console.log(userArray[id].name);
 	userArray.splice(id,1);
 	localStorage.setItem('usuarios', JSON.stringify(userArray));
 	graficar(userArray);
-}
+
+};
+
+btnDeleteUserModal.addEventListener("click", deleteUserConfirm());
+btnDeleteUserModalCancel.addEventListener("click", function(){});
