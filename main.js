@@ -5,6 +5,8 @@ let btnAdd = document.getElementById("btnUserAdd");
 let btnFilter = document.getElementById("btnFilter");
 let busquedaField = document.getElementById("busqueda");
 
+let btnDeleteUserModalCancel = document.getElementById("btnDeleteUserModalCancel");
+let btnDeleteUserModal = document.getElementById("btnDeleteUserModal");
 
 
 //let graphicArray = [];
@@ -114,23 +116,13 @@ function buscar() {
 
 
 function deleteUser(id){
-
-	
-	let btnDeleteUserModalCancel = document.getElementById("btnDeleteUserModalCancel");
-	let modalBody = document.getElementById("modalBody");
-
-
+ 	let modalBody = document.getElementById("modalBody");
 	let modalParrafo = "<p class='p'>Estas seguro que deseas eliminar al usuario: "+userArray[id].name+" </p>";
 	modalBody.innerHTML = modalParrafo;
-
-
 	deleteUserConfirm(id);
-
-
 	//alert('Eliminaras al usuario '+userArray[id].name+", estas seguro?");
-
 }
-let btnDeleteUserModal = document.getElementById("btnDeleteUserModal");
+
 
 function deleteUserConfirm(id) {
 
