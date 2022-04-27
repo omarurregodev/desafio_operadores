@@ -4,10 +4,7 @@ let userArray = [];
 let btnAdd = document.getElementById("btnUserAdd");
 let btnFilter = document.getElementById("btnFilter");
 let busquedaField = document.getElementById("busqueda");
-
-let btnDeleteUserModalCancel = document.getElementById("btnDeleteUserModalCancel");
 let btnDeleteUserModal = document.getElementById("btnDeleteUserModal");
-
 
 //let graphicArray = [];
 
@@ -22,6 +19,10 @@ busquedaField.addEventListener("keypress", (event)=> {
 	}
 });
 busquedaField.addEventListener("change", buscar);
+
+//AQUI TENGO EL LISTENER PARA VALIDAR LA CONFIRMACION DE DELETE USER MODAL
+
+btnDeleteUserModal.addEventListener("click", deleteUserConfirm);
 
 // AQUI ESTOY CARGANDO LA INFORMACION DEL LOCALSTORAGE EN EL ARRAY, DEBO DE HACER ESTO EN EL INICIO SIEMPRE
 
@@ -82,7 +83,7 @@ function graficar(usuarios){
 
 	for (let i = 0; i < usuarios.length; i++) {
 		perfil = perfil + "<div class='card mx-2 p-2' style='width: 18rem;'> <div class='card-body'> <h5 class='card-title'>"+usuarios[i].name+"</h5> <p class='card-text'>"+usuarios[i].age+"</p> <p class='card-text'>"+usuarios[i].career+"</p> <p class='card-text'>"+usuarios[i].about+"</p> </div> <div class='card-body'> <button class='btn btn-danger' onClick='deleteUser("+i+");' data-bs-toggle='modal' data-bs-target='#deleteModal'><i class='fa-solid fa-user-xmark'></i>  Eliminar</button></button></div> </div>";
-	}
+	} 
 	//Renderizo todo apenas acabe
 	html_perfil.innerHTML = perfil;
 	//console.log(perfil)
@@ -114,25 +115,20 @@ function buscar() {
 	graficar(resultado);
 }
 
-
 function deleteUser(id){
  	let modalBody = document.getElementById("modalBody");
-	let modalParrafo = "<p class='p'>Estas seguro que deseas eliminar al usuario: "+userArray[id].name+" </p>";
+ 	let modalParrafo = "<p class='p'>Estas seguro que deseas eliminar al usuario: "+userArray[id].name+" </p>";
+	localStorage.setItem('id_eliminar', id);
 	modalBody.innerHTML = modalParrafo;
-	deleteUserConfirm(id);
-	//alert('Eliminaras al usuario '+userArray[id].name+", estas seguro?");
 }
 
+function deleteUserConfirm() {
+	id = localStorage.getItem('id_eliminar'); // OBTENGO EL ID DEL SOTRAGE
+	if(id != -1){  // VALIDO EL ID QUE ESTA EN EL STORAGE. AL SER POSICION DE ARRAY, TENGO QUE CONTEMPLAR QUE SEAN DIFERENTES DE -1
+		userArray.splice(id,1);
+		localStorage.setItem('usuarios', JSON.stringify(userArray));  //MODIFICO EL ARRAY DE CARDS
+		localStorage.setItem('id_eliminar', -1); // TENGO QUE SETEAR NUEVAMENTE EL VALOR DE ID_ELIMINAR EN -1 PARA QUE LA VALIDACION SEA CORRECTA
+		graficar(userArray);
+	}
 
-function deleteUserConfirm(id) {
-
-	console.log("aqui esta el id: "+userArray[id].name);
-	console.log(userArray[id].name);
-	userArray.splice(id,1);
-	localStorage.setItem('usuarios', JSON.stringify(userArray));
-	graficar(userArray);
-
-};
-
-btnDeleteUserModal.addEventListener("click", deleteUserConfirm());
-btnDeleteUserModalCancel.addEventListener("click", function(){});
+}
